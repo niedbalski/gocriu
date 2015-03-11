@@ -20,21 +20,24 @@ package main
 import (
 	gocriu "github.com/niedbalski/gocriu"
 	"os"
-        "fmt"
+    "fmt"
 	"strconv"
 )
 
 func main() {
-	c, _ := gocriu.NewCriu("/tmp/criu.socket", "/tmp/criogenic", true)
-	dumped, err := c.Dump(pid)
+	criu, _ := gocriu.NewCriu("/tmp/criu.socket", "/tmp/pid_dump", true)
+
+    dumped, err := criu.Dump(pid)
+
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println(dumped)
 
-	restored, err := c.Restore(pid)
-	if err != nil {
+	restored, err := criu.Restore(pid) // Restore the PID
+
+    if err != nil {
 		panic(err)
 	}
 

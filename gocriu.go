@@ -1,9 +1,7 @@
 package gocriu
 
 import (
-	"fmt"
 	proto "github.com/golang/protobuf/proto"
-	rpc "github.com/niedbalski/go-criu/rpc"
 	"net"
 	"os"
 	"path/filepath"
@@ -44,9 +42,9 @@ func NewCriu(unixSocketPath string, imagesDirPath string, shellJob bool) (*Criu,
 	}, nil
 }
 
-func (c *Criu) CriuRequest(requestType rpc.CriuReqType, pid int32) (*rpc.CriuResp, error) {
+func (c *Criu) CriuRequest(requestType CriuReqType, pid int32) (*CriuResp, error) {
 	dumpDir, err := c.GetDumpDir(pid)
-	response := rpc.CriuResp{}
+	response := CriuResp{}
 
 	if err != nil {
 		return nil, err
@@ -59,7 +57,7 @@ func (c *Criu) CriuRequest(requestType rpc.CriuReqType, pid int32) (*rpc.CriuRes
 
 	fd := int32(dir.Fd())
 
-	options := &rpc.CriuOpts{
+	options := &CriuOpts{
 		ImagesDirFd: &fd,
 		Pid:         &pid,
 		ShellJob:    &c.ShellJob,
@@ -76,7 +74,7 @@ func (c *Criu) CriuRequest(requestType rpc.CriuReqType, pid int32) (*rpc.CriuRes
 		return nil, err
 	}
 
-	request := &rpc.CriuReq{
+	request := &CriuReq{
 		Type: &requestType,
 		Opts: options,
 	}
@@ -96,7 +94,7 @@ func (c *Criu) CriuRequest(requestType rpc.CriuReqType, pid int32) (*rpc.CriuRes
 
 	for idx, element := range buf {
 		if element == 0 && buf[idx+1] == 0 {
-			if requestType != rpc.CriuReqType(rpc.CriuReqType_DUMP) {
+			if requestType != CriuReqType(CriuReqType_DUMP) {
 				buf = buf[0:idx]
 			} else {
 				buf = buf[0 : idx+1]
@@ -126,8 +124,8 @@ func (c *Criu) GetDumpDir(pid int32) (string, error) {
 	return dumpPath, nil
 }
 
-func (c *Criu) Dump(pid int32) (*rpc.CriuResp, error) {
-	response, err := c.CriuRequest(rpc.CriuReqType(rpc.CriuReqType_DUMP), pid)
+func (c *Criu) Dump(pid int32) (*CriuResp, error) {
+	response, err := c.CriuRequest(CriuReqType(CriuReqType_DUMP), pid)
 
 	if err != nil {
 		return nil, err
@@ -137,8 +135,8 @@ func (c *Criu) Dump(pid int32) (*rpc.CriuResp, error) {
 
 }
 
-func (c *Criu) Restore(pid int32) (*rpc.CriuResp, error) {
-	response, err := c.CriuRequest(rpc.CriuReqType(rpc.CriuReqType_RESTORE), pid)
+func (c *Criu) Restore(pid int32) (*CriuResp, error) {
+	response, err := c.CriuRequest(CriuReqType(CriuReqType_RESTORE), pid)
 
 	if err != nil {
 		return nil, err
@@ -146,4 +144,3 @@ func (c *Criu) Restore(pid int32) (*rpc.CriuResp, error) {
 
 	return response, nil
 }
-
