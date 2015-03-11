@@ -1,4 +1,4 @@
-package main
+package gocriu
 
 import (
 	"fmt"
@@ -147,27 +147,3 @@ func (c *Criu) Restore(pid int32) (*rpc.CriuResp, error) {
 	return response, nil
 }
 
-func main() {
-	q := os.Args[1]
-
-	c, _ := strconv.Atoi(q)
-
-	criu, err := NewCriu("/tmp/criu.socket", "/tmp/criu", true)
-
-	s, err := criu.Dump(int32(c))
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(s)
-
-	t, err := criu.Restore(int32(c))
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(t)
-
-	// fmt.Println(s.GetType())
-}
