@@ -22,7 +22,7 @@ const (
 	DefaultLogLevel       int32  = 4
 )
 
-func NewCriu(unixSocketPath string, imagesDirPath string, shellJob bool) (*Criu, error) {
+func CriuClient(unixSocketPath string, imagesDirPath string, shellJob bool) (*Criu, error) {
 
 	if unixSocketPath == "" {
 		unixSocketPath = DefaultUnixSocketPath

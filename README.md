@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	criu, _ := gocriu.NewCriu("/tmp/criu.socket", "/tmp/pid_dump", true)
+	criu, _ := gocriu.CriuClient("/tmp/criu.socket", "/tmp/pid_dump", true)
 
     dumped, err := criu.Dump(pid)
 
