@@ -8,7 +8,7 @@ for interact with the rpc/protobuf criu service.
 
 First you need a running criu server
 
-```shell
+```bash
 $ sudo criu service -vvv -W criu -o service.log -b -x --address /tmp/criu.socket -j --shell-job
 ```
 
